@@ -14,20 +14,17 @@ public class UsersController {
     @Autowired
     UsersService usersService;
 
-    @GetMapping
-    @RequestMapping("/findAll")
+    @GetMapping("/findAll")
     public List<Users> findAll(){
         return usersService.getUsers();
     }
 
-    @GetMapping
-    @RequestMapping("/find/{id}")
+    @GetMapping("/find/{id}")
     public Optional<Users> findById(@PathVariable Long id){
         return usersService.getUser(id);
     }
 
-    @PostMapping
-    @RequestMapping("/create")
+    @PostMapping("/create")
     public Users createUsers(@RequestBody Users users){
         return usersService.createUser(users);
     }

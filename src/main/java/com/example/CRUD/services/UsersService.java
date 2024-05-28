@@ -30,6 +30,7 @@ public class UsersService {
         return usersRepository.findById(id).map(user -> {
             user.setName(updatedUser.getName());
             user.setEmail(updatedUser.getEmail());
+            user.setPassword(updatedUser.getPassword());
             return usersRepository.save(user);
         });
     }
