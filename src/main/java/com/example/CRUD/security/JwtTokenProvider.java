@@ -42,7 +42,6 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (Exception e) {
-            // Log exception
         }
         return false;
     }
