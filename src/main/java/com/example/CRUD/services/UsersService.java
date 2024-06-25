@@ -14,15 +14,15 @@ public class UsersService {
     @Autowired
     UsersRepository usersRepository;
 
-    public Users createUser(Users user){
+    public Users createUser(Users user) {
         return usersRepository.save(user);
     }
 
-    public List<Users> getUsers(){
+    public List<Users> getUsers() {
         return usersRepository.findAll();
     }
 
-    public Optional<Users> getUser(Long id){
+    public Optional<Users> getUser(Long id) {
         return usersRepository.findById(id);
     }
 
@@ -35,7 +35,7 @@ public class UsersService {
         });
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         usersRepository.deleteById(id);
     }
 }
