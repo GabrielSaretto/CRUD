@@ -1,6 +1,7 @@
 package com.example.CRUD.controller;
 
 import com.example.CRUD.dto.AuthenticationRequest;
+import com.example.CRUD.dto.AuthenticationResponse;
 import com.example.CRUD.services.CustomUserDetailsService;
 import com.example.CRUD.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AuthenticationController {
     private JwtUtil jwtTokenUtil;
 
     @PostMapping("/authenticate")
-    public String createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
@@ -37,6 +38,6 @@ public class AuthenticationController {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return jwt;
+        return new AuthenticationResponse("Authenticated successfully!", userDetails.getUsername());
     }
 }

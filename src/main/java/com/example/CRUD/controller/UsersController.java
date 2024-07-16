@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/users")
 public class UsersController {
 
     @Autowired
@@ -18,30 +19,31 @@ public class UsersController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @GetMapping("/findAll")
-    public List<Users> findAll(){
+    @GetMapping
+    public List<Users> findAll() {
         return usersService.getUsers();
     }
 
-    @GetMapping("/find/{id}")
-    public Optional<Users> findById(@PathVariable Long id){
+    @GetMapping("/{id}")
+    public Optional<Users> findById(@PathVariable Long id) {
         return usersService.getUser(id);
     }
 
-    @PostMapping("/create")
-    public Users createUsers(@RequestBody Users users){
+    @PostMapping
+    public Users createUser(@RequestBody Users users) {
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         return usersService.createUser(users);
     }
-
-    @PutMapping("/update/{id}")
+    
+    @PutMapping("/{id}")
     public Users updateUser(@PathVariable Long id, @RequestBody Users updatedUser) {
-        Optional<Users> optionalUser = usersService.updateUser(id, updatedUser);
-        return updatedUser;
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        return usersService.updateUser(id, updatedUser)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
         usersService.deleteUser(id);
     }
 

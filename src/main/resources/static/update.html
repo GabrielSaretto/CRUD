@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Atualizar Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #8B4513;
+            color: #f4f4f4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #cda87a;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (!id) {
+                alert('ID do usuário não fornecido!');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            fetch(`http://localhost:8080/users/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById('name').value = user.name;
+                document.getElementById('email').value = user.email;
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+
+        async function updateUser() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('User is not authenticated!');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const response = await fetch(`http://localhost:8080/users/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (response.ok) {
+                alert('Usuário atualizado com sucesso!');
+                window.location.href = 'index.html';
+            } else {
+                alert('Falha ao atualizar usuário!');
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Atualizar Usuário</h1>
+    </div>
+    <div class="form-container">
+        <div class="input-group">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" placeholder="Digite o nome">
+        </div>
+        <div class="input-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Digite o email">
+        </div>
+        <div class="input-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" placeholder="Digite a nova senha">
+        </div>
+        <button onclick="updateUser()">Atualizar</button>
+    </div>
+</div>
+</body>
+</html>
